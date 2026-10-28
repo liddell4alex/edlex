@@ -43,17 +43,28 @@ export default function App() {
           <>
             <Text style={styles.subtitle}>Escanear código QR</Text>
 
-            <CameraView
-              style={{ width: 300, height: 400}}
-              facing="back"
-              barcodeScannerSettings={{ barcodeTypes: ['qr'], }}
-              onBarcodeScanned={ ({data}) => {
-                {
-                  console.log('QR detectado: ', data);
-                  setResultadoQR(data);
-                }
-              }}
-            ></CameraView>
+            {!permiso ? (
+              <Text>Comprobando permiso...</Text>
+            ) : !permiso.granted ? (
+              <Pressable
+                style={styles.boton}
+                onPress={solicitarPermiso}
+              >
+                <Text style={styles.textoBoton}>Permitir acceso a la camara</Text>
+              </Pressable>
+            ) : (
+              <CameraView
+                style={{ width: 300, height: 400}}
+                facing="back"
+                barcodeScannerSettings={{ barcodeTypes: ['qr'], }}
+                onBarcodeScanned={ ({data}) => {
+                  {
+                    console.log('QR detectado: ', data);
+                    setResultadoQR(data);
+                  }
+                }}
+              ></CameraView>
+            )}
 
             <View style={styles.filaTexto}>
               <Text style={styles.texto}>{resultadoQR}</Text>
